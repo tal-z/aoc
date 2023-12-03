@@ -62,9 +62,12 @@ def check_perimeter_1(line_idx, start_idx, end_idx, matrix):
 
 
 def solution_1(data):
-    to_add = []
+    part_numbers = []
+
     for line_idx, line in enumerate(data):
+        # Parse number(s) from line, one by one
         number = ""
+        end_of_number = False
         for idx, char in enumerate(line):
             if char.isdigit():
                 if not number:
@@ -72,18 +75,21 @@ def solution_1(data):
                 number += char
                 # end of line
                 if idx == len(data[0]) - 1:
-                    should_count = check_perimeter_1(line_idx, start_idx, idx, data)
-                    if should_count:
-                        to_add.append(int(number))
-                    number = ""
+                    end_of_number = True
+                    end_idx = idx
             elif number:
+                end_of_number = True
                 end_idx = idx
+
+            # Process parsed number
+            if end_of_number:
                 should_count = check_perimeter_1(line_idx, start_idx, end_idx, data)
                 if should_count:
-                    to_add.append(int(number))
+                    part_numbers.append(int(number))
                 number = ""
+                end_of_number = False
 
-    ans = sum(to_add)
+    ans = sum(part_numbers)
     print("Solution 1:", ans)
 
 
@@ -131,7 +137,9 @@ def solution_2(data):
     potential_gears = defaultdict(list)
 
     for line_idx, line in enumerate(data):
+        # Parse number(s) from line, one by one
         number = ""
+        end_of_number = False
         for idx, char in enumerate(line):
             if char.isdigit():
                 if not number:
@@ -139,23 +147,26 @@ def solution_2(data):
                 number += char
                 # end of line
                 if idx == len(data[0]) - 1:
-                    should_count, coord = check_perimeter_2(line_idx, start_idx, idx, data)
-                    if should_count:
-                        potential_gears[coord].append(int(number))
-                    number = ""
+                    end_idx = idx
+                    end_of_number = True
             elif number:
                 end_idx = idx
+                end_of_number = True
+
+            # Process parsed number
+            if end_of_number:
                 should_count, coord = check_perimeter_2(line_idx, start_idx, end_idx, data)
                 if should_count:
                     potential_gears[coord].append(int(number))
                 number = ""
+                end_of_number = False
 
-    gear_ratios = {
-        k: v[0] * v[1]
-        for k, v in potential_gears.items()
-        if len(v) == 2
-    }
-    ans = sum(gear_ratios.values())
+    gear_ratios = [
+        gear[0] * gear[1]
+        for gear in potential_gears.values()
+        if len(gear) == 2
+    ]
+    ans = sum(gear_ratios)
     print("Solution 2:", ans)
 
 
