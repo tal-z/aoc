@@ -38,17 +38,10 @@ def solution_1(data):
 
 def solution_2(data):
     card_counts = defaultdict(lambda: 0)
-    #card_values = defaultdict(lambda: (set(), set()))
 
-    # build data structures for keping track of the number of cards I've won as I go, and for the number of cards I win
     for game in data:
         card_id, winners, my_numbers = game
         card_counts[card_id] += 1
-        #card_values[card_id][0].update(winners)
-        #card_values[card_id][1].update(my_numbers)
-
-    for game in data:
-        card_id, winners, my_numbers = game
         my_winners = my_numbers.intersection(winners)
         winners_count = len(my_winners)
 
